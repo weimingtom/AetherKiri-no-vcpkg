@@ -1,0 +1,2 @@
+/home/wmt/AetherKiri/.aetherkiri-cache/vcpkg/
+

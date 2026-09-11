@@ -1,0 +1,2 @@
+./apps/godot_app/bin/linux/debug/
+
