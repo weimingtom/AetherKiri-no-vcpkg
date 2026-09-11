@@ -18,6 +18,74 @@
 * ./Godot_v4.7-stable_linux.x86_64
 * (Import ./apps/godot_app/project.godot, and run)  
 
+## weibo record
+```
+我测试过KrKr2-Next的非官方发布版（在AetherKiri的release页面有apk），
+确定在某些手机设备（例如红米13C）上可以运行，我猜测可能只能在Android 14，如果是Android 12也有可能黑屏 ​​​​
+
+转，gh上有个开源项目AetherKiri/AetherKiri，继承自flutter版的reAAAq/KrKr2-Next的代码，
+我看到它好像在整大活，把代码移植到godot引擎上，至于是什么原理就不清楚了（可能这位作者想在ios上运行？
+基于GDExtension‌？），它没有把最新的安卓版发布出来，我是从github actions页那里下载的，
+运行效果如图，当然我不确保所有安卓设备都能运行。另外这个安卓版中滚动的控件可能会滚动不了，
+我觉得这个的bug比flutter版更多。现在没时间研究这个，可能也要等年底
+
+我可能会研究一下AetherKiri，因为这项目基于Godot C++ GDExtensions，而C++ GDExtensions的意思
+是指用C++实现godot的类（通常是用gdscript而非C++），然后可以用类名字符串实例化这个类
+（通常是类名.instantiate()，但这里用ClassDB.instantiate(类名)），在gdscript中调用
+这个Node节点类的子类进行显示——我觉得跑通C++ GDExtensions例子比跑通这个项目可能还会更好玩，
+所以准备有时间试一下，看能不能在Linux下编译运行
+
+AetherKiri研究。我暂时未跑AetherKiri这个项目的代码，我先试试跑godotengine/godot-cpp-template。
+scons可以很轻松编译出动态库，so文件输出到project\bin\linux目录下（对应example.gdextension里面的相对路径），
+然后用godot 4.4加载project/project.godot即可。不过这里有几个问题，首先编译会很慢，其次用godot 4.1会运行失败，
+看错误提示会提示一定要用godot 4.4才能正常运行。接下来有空试试换成cmake看能不能编译（对应godot-cpp的顶层目录，
+也可以用cmake编译）
+
+AetherKiri研究。测试cmake编译godot-cpp-template。上次忘记说开发环境，是ubuntu 25.04，清除项目是scons -c，
+然后用cmake编译也可以mkdir build;cd build;cmake ..;make -j8然后不需要install，编译完成后会把.so文件输出到
+project/bin/linux目录下（补注：so文件需要自己重命名，添加lib前缀），然后用godot 4.4.1加载project目录即可
+
+我记录下的krkr2项目，有6个还没研究，其中有2个是活跃的，AetherKiri和kirikiroid2-web，我可能先研究这两个，
+其他就随意了。不要再来了，再多我就受不了，不过代码库越多，也是好事，我可以参考的代码就更多
+
+AetherKiri研究。Ubuntu 25.04 VMware 运行效果如下 ​​​
+
+AetherKiri研究。在Ubuntu 25.04 VMware下用官方介绍的cmake+vcpkg方法去编译Linux版。
+首先关于git仓库的子模块，无视就行，这里为了简单，我只编译了0.2.4这个tag的代码git checkout -f 0.2.4
+（只有一个闭源子模块）。然后用cmake编译，它是用vcpkg编译依赖的，基本就是用这两个来编译：
+./build.sh和./tools/setup_linux.sh，如果你不安装vcpkg直接执行build.sh，它会提示执行setup_linux.sh，
+可以认为setup_linux.sh就是下载安装vcpkg的（还有godot ide和template），不过setup_linux.sh的最后
+会触发template解压失败，忽略就可以了（后面打包godot就会报错，但我只需要用godot ide导入即可），
+然后用./build.sh执行cmake+vcpkg配置和编译，最后的godot template报错可以忽略，编译出很多个so文件输出
+到./apps/godot_app/bin/linux/debug/目录下（包括libaether_kiri_godot.so），然后用godot ide（linux版，
+版本是v4.7，我怀疑4.4和以上都支持）导入这个目录./apps/godot_app/project.godot然后运行即可
+
+AetherKiri研究。我现在是基于0.2.4版本来修改（未改好）。这开源项目基于KrKr2-Next
+（还有另外一批开源项目是基于另外一个krkr2），但改动非常大（连注释也改，还有很底层的脚本引擎也改），
+我都不指望我的修改版编译出来能运行了——例如ScriptMgnIntf.cpp里面加了很多兼容代码。TextStream.cpp则是编码。
+总体来说这个开源项目应该是插件实现比较齐全（另一个类似情况则是krkrsdl3），当然能不能用，我不好说，
+我跑它官方打包的安卓版就跑不通，也许它的修改重心在ios上而非安卓。但改动那么多是不是好事，我不敢断言。
+如果笼统来说，krkr2, krkr2-next, krkrsdl3这三个主要分支都很值得研究，如果说最完美，可能目前只有krkrsdl3会比较好，
+当然我不太想研究插件，我觉得很多情况都用不上，和ffmpeg一样，我觉得不看这些代码会更好，
+最好能用某种方法跳过来实现一个超级轻量级的实现（我以前甚至连音频输出也去掉）
+
+AetherKiri研究。我暂时试试用ubuntu 25.04和KrKr2-Next-no-vcpkg的Makefile编译一下
+（以前好像用xubuntu 20会好一些）。但实际上还需要对一下cpp文件，而且这个要编译godot扩展
+的c++头文件，我先想好makefile再试。暂时还没有遇到太大的问题（因为我还没开始编译它核心的动态库）。
+非常花时间，我都不想改
+
+AetherKiri研究。把godot-cpp的静态库编译出来了，总共1000多个cpp文件——gcc参数不知道是什么，
+乱填，我是参考ps aux的命令行参数，如果直接看scons或cmake的配置文件可能比较麻烦，暂时先这样，等后面编译失败了再看 ​​​​
+
+AetherKiri研究。试试链接动态库（差不多最后的工作了），但有些符号未实现。按理来说动态库允许符号未实现，
+但如果被godot加载会失败，所以我打算还是先解决这个问题。大概有300多处，因为我改了它源代码，我要逐个链接失败的地方看，
+短时间解决不了，我觉得可能要一两个月时间，我可能会先研究别的
+
+AetherKiri研究。Makefile编译版做好了，虽然我有点心急，有些地方可能还不是很完善（例如有些第三方库可能不需要，
+但我还是引入了那些库的头文件）。不管了，以后再想办法去掉，有时间会放到gh上继续修改。目前只能编译ubuntu 25的版本，
+其他版本还不能编译，如果想编译安卓版可能还要继续研究下去 ​​​
+```
+
 ## Original README.md
 
 <p align="center">
