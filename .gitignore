@@ -2,15 +2,15 @@
 /**/cmake-build-android/
 /**/cmake-build-android-release/
 /**/cmake-build-android-debug/
-/**/build/
-!/build/
-/build/*
+#/**/build/
+#!/build/
+#/build/*
 !/build/build_web.sh
 !/build/patch_web_export.mjs
 !/build/web_export_local_picker.js
 !/build/web_export_range_fs.js
 /**/out/
-/**/bin/
+#/**/bin/
 vcpkg_installed/
 
 .idea/
@@ -42,7 +42,7 @@ third_party/live2d/Core/*.map
 java_pid*.hprof
 .DS_Store
 *.pdb
-*.log
+#*.log
 latest_log_path.txt
 
 # Cubism SDK (proprietary binary, download from live2d.com)
