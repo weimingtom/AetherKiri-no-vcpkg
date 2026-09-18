@@ -1,6 +1,6 @@
 # AetherKiri-no-vcpkg
-[WIP] My AetherKiri 0.2.4 fork for linux, without vcpkg
-The Makefile is based on https://github.com/weimingtom/KrKr2-Next-no-vcpkg/blob/master/Makefile, with some modifications, like this
+[WIP] My AetherKiri 0.2.4 fork for linux, without vcpkg.   
+The Makefile is based on https://github.com/weimingtom/KrKr2-Next-no-vcpkg/blob/master/Makefile, with some modifications, like this  
 ```
 ##FIXME:added
 OBJS += cpp/core/plugin/PluginCallTracer.o
