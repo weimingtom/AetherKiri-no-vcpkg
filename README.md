@@ -1,5 +1,14 @@
 # AetherKiri-no-vcpkg
 [WIP] My AetherKiri 0.2.4 fork for linux, without vcpkg
+The Makefile is based on https://github.com/weimingtom/KrKr2-Next-no-vcpkg/blob/master/Makefile, with some modifications, like this
+```
+##FIXME:added
+OBJS += cpp/core/plugin/PluginCallTracer.o
+OBJS += cpp/core/visual/godot/GodotGpuBridge.o
+OBJS += cpp/core/visual/godot/GodotRenderManager.o
+OBJS += cpp/core/base/XP3ArchiveCxDecoder.o
+OBJS += cpp/core/tjs2/tjsScriptRecovery.o
+```
 
 ## Build and run for Ubuntu 25.04 64bit VMware
 * sudo apt update
@@ -84,6 +93,15 @@ AetherKiri研究。试试链接动态库（差不多最后的工作了），但�
 AetherKiri研究。Makefile编译版做好了，虽然我有点心急，有些地方可能还不是很完善（例如有些第三方库可能不需要，
 但我还是引入了那些库的头文件）。不管了，以后再想办法去掉，有时间会放到gh上继续修改。目前只能编译ubuntu 25的版本，
 其他版本还不能编译，如果想编译安卓版可能还要继续研究下去 ​​​
+
+===
+
+关于AetherKiri安卓版无法加载xp3文件的问题，我怀疑是这样，它应该只支持krkrsdl2和wamsoft/krkrz所使用的那种风格的xp3文件，
+即使用了system_polyfill/PolyfillInitialize.tjs, 不过这里还有一个疑点，为什么我编译AetherKiri的0.2.4版PC版可以加载
+不带polyfill的xp3文件？我还是不太明白是什么原因，还需要继续研究
+
+哦，我想起来，也有可能是因为我魔改过AetherKiri的代码的过程中，把我之前修改KrKr2-Next的修改内容融入进去，
+导致它可能会兼容非utf-8编码——当然这只是我猜测
 ```
 
 ## Original README.md
